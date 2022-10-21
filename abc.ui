@@ -258,6 +258,19 @@
      <number>0</number>
     </property>
    </widget>
+   <widget class="QPushButton" name="btnSaveImage">
+    <property name="geometry">
+     <rect>
+      <x>920</x>
+      <y>560</y>
+      <width>133</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Lưu Ảnh Đã Xử Lý</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
