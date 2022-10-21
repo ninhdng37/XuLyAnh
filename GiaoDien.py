@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QLabel
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QSlider
 from PyQt5 import uic, QtCore
 import sys
 from PyQt5.QtGui import QPixmap, QImage
@@ -17,11 +17,11 @@ class UI(QMainWindow):
 
         #Loc Nhieu
         self.actionGaussianBlur.triggered.connect(self.GaussianBlur)
-        self.hsGauss.valueChanged.connect(self.GaussianBlurChange)
+        self.hsGauss.sliderReleased.connect(self.GaussianBlurChange)
         #QSlider.setDisabled(true)
         # QSlider.setEnabled(True)
         self.actionmedianBlur.triggered.connect(self.medianBlur)
-        self.hsMedian.valueChanged.connect(self.medianBlurChange)
+        self.hsMedian.sliderReleased.connect(self.medianBlurChange)
 
         #Do bien, do canh
         self.actionCanny.triggered.connect(self.Canny)
@@ -95,7 +95,7 @@ class UI(QMainWindow):
         msg.setStandardButtons(QMessageBox.Ok)
         retval = msg.exec_()
 
-    def chonAnh(self):
+    def ImageWasChoosen(self):
         if len(self.tmp) != 0:
             self.disabled()
             return True
@@ -103,7 +103,7 @@ class UI(QMainWindow):
             self.thongBao('Ban chua chon anh')
 
     def GaussianBlur(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.hsGauss.setEnabled(True)
             self.image = cv2.GaussianBlur(self.tmp, (5, 5), self.hsGauss.value())
             self.displayImage(2)
@@ -113,41 +113,42 @@ class UI(QMainWindow):
         self.displayImage(2)
 
     def medianBlur(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.hsMedian.setEnabled(True)
             self.image = cv2.medianBlur(self.tmp, self.hsMedian.value())
             self.displayImage(2)
 
     def medianBlurChange(self):
+        # QSlider.sliderReleased
         self.image = cv2.medianBlur(self.tmp, self.hsMedian.value())
         self.displayImage(2)
 
 
     def Canny(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.image = cv2.Canny(self.tmp, self.lblAnhXuLy.width(), self.lblAnhXuLy.height())
             self.displayImage(2)
 
     def Laplacian(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.image = cv2.Laplacian(self.tmp, cv2.CV_64F, ksize=3)
             self.image = np.uint8(np.absolute(self.image))
             self.displayImage(2)
 
     def SobelX(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.image = cv2.Sobel(self.tmp, cv2.CV_64F, 1, 0)
             self.image = np.uint8(np.absolute(self.image))
             self.displayImage(2)
 
     def SobelY(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.image = cv2.Sobel(self.tmp, cv2.CV_64F, 0, 1)
             self.image = np.uint8(np.absolute(self.image))
             self.displayImage(2)
 
     def SobelCombined(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             self.image = cv2.Sobel(self.tmp, cv2.CV_64F, 1, 0)
             self.image = np.uint8(np.absolute(self.image))
 
@@ -167,7 +168,7 @@ class UI(QMainWindow):
             self.displayImage(2)
 
     def Prewitt(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             kernelX = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]])
             kernelY = np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]])
             self.image = cv2.filter2D(self.tmp, -1, kernelX)
@@ -176,7 +177,7 @@ class UI(QMainWindow):
             self.displayImage(2)
 
     def detectFace(self):
-        if self.chonAnh():
+        if self.ImageWasChoosen():
             face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
             self.image = self.tmp
             self.image = cv2.resize(self.image, (800, 600))
