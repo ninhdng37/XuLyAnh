@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QLabel
 from PyQt5 import uic, QtCore
 import sys
 from PyQt5.QtGui import QPixmap, QImage
@@ -88,16 +88,19 @@ class UI(QMainWindow):
             self.lblAnhXuLy.setPixmap(QPixmap.fromImage(img).scaled(self.lblAnhGoc.width(), self.lblAnhGoc.height()))
             self.lblAnhXuLy.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
+    def thongBao(self, message):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText(message)
+        msg.setStandardButtons(QMessageBox.Ok)
+        retval = msg.exec_()
+
     def chonAnh(self):
         if len(self.tmp) != 0:
             self.disabled()
             return True
         else:
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Information)
-            msg.setText('Ban chua chon anh')
-            msg.setStandardButtons(QMessageBox.Ok)
-            retval = msg.exec_()
+            self.thongBao('Ban chua chon anh')
 
     def GaussianBlur(self):
         if self.chonAnh():
@@ -206,13 +209,16 @@ class UI(QMainWindow):
         self.displayImage(2)
 
     def saveImage(self):
-        # selecting file path
-        filePath, _ = QFileDialog.getSaveFileName(self, "Save Image", "",
-                                                  "PNG(*.png);;JPEG(*.jpg)")
-        image = ImageQt.fromqpixmap(self.lblAnhXuLy.pixmap())
-        if filePath == "":
-            return
-        image.save(filePath)
+        if self.lblAnhXuLy.pixmap() is not None:
+            image = ImageQt.fromqpixmap(self.lblAnhXuLy.pixmap())
+            filePath, _ = QFileDialog.getSaveFileName(self, "Save Image", "",
+                                                      "PNG(*.png);;JPEG(*.jpg)")
+            if filePath == "":
+                return
+            image.save(filePath)
+        else:
+            self.thongBao('Chưa có ảnh xử lý để lưu')
+
 
     def reset(self):
         self.lblAnhGoc.setPixmap(QPixmap())
