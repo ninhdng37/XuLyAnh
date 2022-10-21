@@ -115,12 +115,18 @@ class UI(QMainWindow):
     def medianBlur(self):
         if self.ImageWasChoosen():
             self.hsMedian.setEnabled(True)
-            self.image = cv2.medianBlur(self.tmp, self.hsMedian.value())
+            a = self.hsMedian.value()
+            if a % 2 == 0:
+                a = a + 1
+            self.image = cv2.medianBlur(self.tmp, a)
             self.displayImage(2)
 
     def medianBlurChange(self):
         # QSlider.sliderReleased
-        self.image = cv2.medianBlur(self.tmp, self.hsMedian.value())
+        a = self.hsMedian.value()
+        if a % 2 == 0:
+            a = a + 1
+        self.image = cv2.medianBlur(self.tmp, a)
         self.displayImage(2)
 
 
