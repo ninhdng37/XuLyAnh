@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPixmap, QImage
 import cv2
 import numpy as np
 import faceRecognition as fr
+from PIL import ImageQt
 
 class UI(QMainWindow):
     def __init__(self):
@@ -13,6 +14,7 @@ class UI(QMainWindow):
         # self.hsGauss.setDisabled(True)
         # self.hsMedian.setDisabled(True)
         self.disabled()
+
         #Loc Nhieu
         self.actionGaussianBlur.triggered.connect(self.GaussianBlur)
         self.hsGauss.valueChanged.connect(self.GaussianBlurChange)
@@ -28,11 +30,17 @@ class UI(QMainWindow):
         self.actionSobelY.triggered.connect(self.SobelY)
         self.actionSobelCombined.triggered.connect(self.SobelCombined)
         self.actionPrewitt.triggered.connect(self.Prewitt)
+
         #Face Detection
         self.btnFaceDetection.clicked.connect(self.detectFace)
+
         #Face Recognition
         self.btnFaceRecognition.clicked.connect(self.recognizeFace)
 
+        #Save Image
+        self.btnSaveImage.clicked.connect(self.saveImage)
+
+        #Choose Image
         self.btnChonAnh.clicked.connect(self.open_img)
         self.btnReset.clicked.connect(self.reset)
 
@@ -196,6 +204,15 @@ class UI(QMainWindow):
                 continue
             fr.put_text(self.image, predicted_name, x, y)
         self.displayImage(2)
+
+    def saveImage(self):
+        # selecting file path
+        filePath, _ = QFileDialog.getSaveFileName(self, "Save Image", "",
+                                                  "PNG(*.png);;JPEG(*.jpg)")
+        image = ImageQt.fromqpixmap(self.lblAnhXuLy.pixmap())
+        if filePath == "":
+            return
+        image.save(filePath)
 
     def reset(self):
         self.lblAnhGoc.setPixmap(QPixmap())
