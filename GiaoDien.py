@@ -221,8 +221,8 @@ class UI(QMainWindow):
 
 
     def reset(self):
-        self.lblAnhGoc.setPixmap(QPixmap())
-        self.lblAnhXuLy.setPixmap(QPixmap())
+        self.lblAnhGoc.clear()
+        self.lblAnhXuLy.clear()
         self.disabled()
         self.tmp = self.image = []
 
